@@ -6,7 +6,7 @@ Ds18b20 ds18b20(PC_0);
 Ticker tickerTemp;
 float temp;
 
-AnalogIn TDS(A0); //TDS Sensor
+AnalogIn TDS(PB_0); //TDS Sensor
 Ticker tickerTDS;
 float tdsValue;
 
@@ -15,11 +15,13 @@ void getTemp() {
     ds18b20.start();
     wait_ms(750);
     temp = ds18b20.readTemperature();
+    //printf("Temperatur: %.2f Grad Celsius\n", temp);
 }
 
 void getTDS() {
     float voltage = TDS.read() * 3.3;
-    float tdsValue = voltage / 1024 * 1000;
+    tdsValue = voltage / 1024 * 1000;
+    //printf("TDS Value: %f ppm\n", tdsValue);
 }
 
 int main() {
