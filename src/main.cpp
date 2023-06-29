@@ -38,7 +38,6 @@ float average(float value[AVERAGE_INTERVAL], int index) {
 }
 
 
-
 float getTemp() {
     ds18b20.start();
     wait_ms(750);
@@ -47,11 +46,13 @@ float getTemp() {
     return temp;
 }
 
+
 float getTDS() {
     tdsValue = tds.calculateTds();
     printf("TDS Value: %f ppm\n", tdsValue);
     return tdsValue;
 }
+
 
 void readSensor() { 
     // Reset index if necessary
@@ -75,9 +76,11 @@ void readSensor() {
     }
 }
 
+
 void triggerReading() {
     oneMinuteTicker.attach(&readSensor, 1.0f);       // Read sensor every second, to get a more accurate average
 }
+
 
 int main() {
     //Setup
@@ -86,7 +89,7 @@ int main() {
     oneMinuteTicker.attach(&readSensor, 1.0f);
 
     while(1) {
-        // wait one second
-        wait(1);
+        wait(1);                                  // wait one second
+        
     }
 }
