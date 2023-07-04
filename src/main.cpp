@@ -48,7 +48,6 @@ void bluetoothSend(float data[]) {
     
 }
 
-
 float average(float value[AVERAGE_INTERVAL], int index) {
     float sum = 0;
     for (int i = 0; i < index; i++) {
@@ -56,8 +55,6 @@ float average(float value[AVERAGE_INTERVAL], int index) {
     }
     return sum / index;
 }
-
-
 
 float getTemp() {
     ds18b20.start();
@@ -106,6 +103,10 @@ void triggerReading() {
     oneMinuteTicker.attach(&readSensor, 1.0f);       // Read sensor every second, to get a more accurate average
 }
 
+void tickerFunction() {
+    tds.updateBuffer();
+    bluetoothReceive();
+}
 
 int main() {
     //Setup
