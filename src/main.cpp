@@ -9,25 +9,44 @@
 
 Ticker oneMinuteTicker;
 Ticker xMinuteTicker;
+Serial bluetooth(PA_9, PA_10);
+Serial pc(USBTX, USBRX);
 
 
 Ds18b20 ds18b20(PC_0);
-Ticker tickerTemp;
 float temp;
 float tempSamples[AVERAGE_INTERVAL];
 int tempSampleIndex = 0;
 
 Tds tds(PB_0);                                      //TDS Sensor
-Ticker tickerTDS;
 float tdsValue;
 float tdsSamples[AVERAGE_INTERVAL];
 int tdsSampleIndex = 0;
 
+Ticker ticker;
+char bluetoothData;
 
-void updateBuffer() {
-    tds.updateBuffer();
+
+void bluetoothReceive() {
+    // read data from bluetooth
+    if(bluetooth.readable()) {
+        bluetoothData = bluetooth.getc();
+        printf("Received: %c\n", bluetoothData);
+    }
 }
 
+void bluetoothSend(float data[]) {
+    for (int i = 0; i < 2; i++) {
+      int byte = round(data[i]);
+      bluetooth.putc((char)byte);
+      
+      // Print sent integer
+      pc.printf("Sent Integer: %i\r\n", byte);
+      
+      wait(1); // Wait for 1 second between sending each integer
+    }
+    
+}
 
 float average(float value[AVERAGE_INTERVAL], int index) {
     float sum = 0;
@@ -37,7 +56,6 @@ float average(float value[AVERAGE_INTERVAL], int index) {
     return sum / index;
 }
 
-
 float getTemp() {
     ds18b20.start();
     wait_ms(750);
@@ -46,13 +64,11 @@ float getTemp() {
     return temp;
 }
 
-
 float getTDS() {
     tdsValue = tds.calculateTds();
     printf("TDS Value: %f ppm\n", tdsValue);
     return tdsValue;
 }
-
 
 void readSensor() { 
     // Reset index if necessary
@@ -66,6 +82,13 @@ void readSensor() {
         // Print average
         printf("Average temperature: %.2f Grad Celsius\n", tempAverage);
         printf("Average TDS Value: %f ppm\n", tdsAverage);
+        // Send average to bluetooth
+        float data[2] = {tempAverage, tdsAverage};
+        // print the data to the serial port
+        for (int i = 0; i < 2; i++) {
+            pc.printf("Data: %f\r\n", data[i]);
+        }
+        bluetoothSend(data);
     } else {
         // Read sensor
         tempSamples[tempSampleIndex] = getTemp();
@@ -76,20 +99,27 @@ void readSensor() {
     }
 }
 
-
 void triggerReading() {
     oneMinuteTicker.attach(&readSensor, 1.0f);       // Read sensor every second, to get a more accurate average
 }
 
+void tickerFunction() {
+    tds.updateBuffer();
+    bluetoothReceive();
+}
 
 int main() {
     //Setup
-    tickerTDS.attach(&updateBuffer, 0.1);
+    pc.printf("Start\n");
+    //bluetooth.attach(&bluetoothReceive);  // Attach interrupt to receive data from bluetooth    //not working
+    
+    
+    ticker.attach(&tickerFunction, 0.1);
     xMinuteTicker.attach(&triggerReading, 600);    // Trigger reading every 10 minutes (time should not be shorter than one minute)
-    oneMinuteTicker.attach(&readSensor, 1.0f);
+    oneMinuteTicker.attach(&readSensor, 1.0f);     // start with reading if commented out the first reading will be after 10 minutes
 
     while(1) {
-        wait(1);                                  // wait one second
-        
+        // wait one second
+        wait(1);
     }
 }
