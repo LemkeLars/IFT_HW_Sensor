@@ -6,6 +6,7 @@
 //Setup
 #define AVERAGE_INTERVAL 60                        // Average over 60 seconds
 #define SAMPLE_INTERVAL 15*60                      // Sample every 15 minutes
+#define SensorAnount 2
 
 Ticker oneMinuteTicker;
 Ticker xMinuteTicker;
@@ -36,14 +37,13 @@ void bluetoothReceive() {
 }
 
 void bluetoothSend(float data[]) {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < SensorAnount; i++) {
       int byte = round(data[i]);
       bluetooth.putc((char)byte);
       
       // Print sent integer
       pc.printf("Sent Integer: %i\r\n", byte);
       
-      wait(1); // Wait for 1 second between sending each integer
     }
     
 }
@@ -83,9 +83,9 @@ void readSensor() {
         printf("Average temperature: %.2f Grad Celsius\n", tempAverage);
         printf("Average TDS Value: %f ppm\n", tdsAverage);
         // Send average to bluetooth
-        float data[2] = {tempAverage, tdsAverage};
+        float data[SensorAnount] = {tempAverage, tdsAverage};
         // print the data to the serial port
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < SensorAnount; i++) {
             pc.printf("Data: %f\r\n", data[i]);
         }
         bluetoothSend(data);
@@ -105,14 +105,13 @@ void triggerReading() {
 
 void tickerFunction() {
     tds.updateBuffer();
-    bluetoothReceive();
+    //bluetoothReceive();
 }
 
 int main() {
     //Setup
     pc.printf("Start\n");
     //bluetooth.attach(&bluetoothReceive);  // Attach interrupt to receive data from bluetooth    //not working
-    
     
     ticker.attach(&tickerFunction, 0.1);
     xMinuteTicker.attach(&triggerReading, 600);    // Trigger reading every 10 minutes (time should not be shorter than one minute)

@@ -3,7 +3,7 @@
 
 ## Introduction
 
-IFT_HW_Sensor is a Project written in C++ that reads data from different sensors related to water Quality, averages the readings over specified intervals and outputs these values.
+IFT_HW_Sensor is a Project written in C++ that reads data from different sensors related to water Quality, averages the readings over specified intervals and send them via bluetooth to an arduino nano which then saves and displays the data. The arduino source code can be found [here](https://github.com/LemkeLars/IFT_HW_Sensor_receiver)
 
 ## Repository Structure
 
@@ -28,11 +28,11 @@ The code is designed to average readings over a 60-second interval and take new 
 
 ## Recent Updates
 
-The most recent update to this project (as of June 29, 2023) added full support for the TDS sensor and implemented a delay in the calculation of averages.
+The most recent update to this project (as of July 6, 2023) added support for sending the readings via bluetooth to an arduino nano. The arduino then saves the data to an SD card and displays it on an LCD screen. The arduino source code can be found [here](https://github.com/LemkeLars/IFT_HW_Sensor_receiver)
 
 ## Future Work
 
-This project is actively being developed. Future updates may include additional sensor support, saving the read data, displaying the data on an LCD and enhanced error handling.
+This project is actively being developed. Future updates may include additional sensor support and enhanced error handling.
 
 ## License
 
