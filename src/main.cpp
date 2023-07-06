@@ -112,8 +112,6 @@ int main() {
     //Setup
     pc.printf("Start\n");
     //bluetooth.attach(&bluetoothReceive);  // Attach interrupt to receive data from bluetooth    //not working
-    float data[SensorAnount] = {1, 2};
-    bluetoothSend(data);
     
     ticker.attach(&tickerFunction, 0.1);
     xMinuteTicker.attach(&triggerReading, 600);    // Trigger reading every 10 minutes (time should not be shorter than one minute)
