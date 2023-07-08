@@ -32,7 +32,7 @@ void bluetoothReceive() {
     // read data from bluetooth
     if(bluetooth.readable()) {
         bluetoothData = bluetooth.getc();
-        printf("Received: %c\n", bluetoothData);
+        printf("Received: %c\n\r", bluetoothData);
     }
 }
 
@@ -60,13 +60,13 @@ float getTemp() {
     ds18b20.start();
     wait_ms(750);
     temp = ds18b20.readTemperature();
-    printf("temperature: %.2f Grad Celsius\n", temp);
+    printf("temperature: %.2f Grad Celsius\n\r", temp);
     return temp;
 }
 
 float getTDS() {
     tdsValue = tds.calculateTds();
-    printf("TDS Value: %f ppm\n", tdsValue);
+    printf("TDS Value: %f ppm\n\r", tdsValue);
     return tdsValue;
 }
 
@@ -80,8 +80,8 @@ void readSensor() {
         float tempAverage = average(tempSamples, AVERAGE_INTERVAL);
         float tdsAverage = average(tdsSamples, AVERAGE_INTERVAL);
         // Print average
-        printf("Average temperature: %.2f Grad Celsius\n", tempAverage);
-        printf("Average TDS Value: %f ppm\n", tdsAverage);
+        printf("Average temperature: %.2f Grad Celsius\n\r", tempAverage);
+        printf("Average TDS Value: %f ppm\n\r", tdsAverage);
         // Send average to bluetooth
         float data[SensorAnount] = {tempAverage, tdsAverage};
         // print the data to the serial port
