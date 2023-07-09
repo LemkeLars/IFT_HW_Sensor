@@ -70,7 +70,7 @@ float average(float value[AVERAGE_INTERVAL], int index) {
 }
 
 float getLevel() {
-    printf("Abstand: %f cm\n\r", abstand);
+    printf("Abstand: %.2f cm\n\r", abstand);
     return abstand;
 }
 
@@ -90,7 +90,7 @@ float getTemp() {
 
 float getTDS() {
     tdsValue = tds.calculateTds();
-    printf("TDS Value: %f ppm\n\r", tdsValue);
+    printf("TDS Value: %.2f ppm\n\r", tdsValue);
     return tdsValue;
 }
 
