@@ -75,7 +75,7 @@ float getLevel() {
 }
 
 float getPH() {
-    float phValue = ph.read()*14;
+    float phValue = 7 -(ph.read()*14);
     printf("pH Value: %.2f\n\r", phValue);
     return phValue;
 }
